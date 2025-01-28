@@ -1,0 +1,4 @@
+CREATE TABLE ai_profiles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
