@@ -1,0 +1,52 @@
+<form 
+    (submit)="sendMessage()"
+    class="flex flex-col h-screen bg-gray-900"
+>
+    <!-- Chat messages container -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Example received message -->
+        <!-- <div class="flex items-start space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm">
+                U
+            </div>
+            <div class="max-w-[75%]">
+                <div class="bg-gray-800 rounded-2xl rounded-tl-none px-3 py-1.5 text-gray-100 text-sm">
+                    Hello! How can I help you today?
+                </div>
+                <span class="text-xs text-gray-500 ml-2 mt-1">12:30 PM</span>
+            </div>
+        </div> -->
+
+        <!-- Example sent message -->
+        <!-- <div class="flex items-start justify-end space-x-2.5">
+            <div class="max-w-[75%]">
+                <div class="bg-indigo-600 rounded-2xl rounded-tr-none px-3 py-1.5 text-white text-sm">
+                    Hi! I have a question about the new features.
+                </div>
+                <span class="text-xs text-gray-500 mr-2 mt-1 text-right block">12:31 PM</span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-indigo-700 flex items-center justify-center text-white text-sm">
+                M
+            </div>
+        </div> -->
+    </div>
+
+    <!-- Message input area -->
+    <div class="border-t border-gray-800 p-4 bg-gray-900">
+        <div class="flex items-center space-x-3">
+            <div class="flex-1">
+                <input 
+                    type="text" 
+                    placeholder="Type your message..." 
+                    [(ngModel)]="message"
+                    class="w-full text-sm placeholder:text-sm px-4 py-2 rounded-full bg-gray-800 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+            </div>
+            <button class="p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</form>
