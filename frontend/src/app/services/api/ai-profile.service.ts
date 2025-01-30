@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 export type CreateAiProfileResponse = {
   message: string;
+  rows_inserted: number;
 }
 
 @Injectable({
@@ -19,6 +20,6 @@ export class AiProfileService {
 
   create(name: string): Observable<CreateAiProfileResponse> {
     return this._http.post<CreateAiProfileResponse>(`${environment.apiUrl}/ai-profile`, [name])
-      .pipe(this._observableService.extractToObject(['message']));
+      .pipe(this._observableService.extractToObject(['message', 'rows_inserted']));
   }
 }

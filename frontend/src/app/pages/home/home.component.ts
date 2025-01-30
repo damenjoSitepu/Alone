@@ -3,6 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommandService, CommandType } from '../../services/utils/command.service';
 import { FormsModule } from '@angular/forms';
 import { AiProfileService } from '../../services/api/ai-profile.service';
+import { finalize } from 'rxjs';
+
+type Message = {
+  isSender: boolean;
+  message: string;
+  timestamp: Date;
+};
 
 @Component({
   standalone: true,
@@ -15,7 +22,11 @@ import { AiProfileService } from '../../services/api/ai-profile.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  message: string = '';
+  input: string = '';
+  messages: Message[] = [];
+  loaders: { sent: boolean } = {
+    sent: false,
+  };
 
   constructor(
     private _commandService: CommandService,
@@ -27,29 +38,38 @@ export class HomeComponent implements OnInit {
   }
 
   wash(): void {
-    this.message = "";
+    this.input = "";
   }
 
   sendMessage(): void {
-    const message = this.message;
+    const input = this.input;
     let command: CommandType;
 
     this.wash();
 
     try {
-      command = this._commandService.parse(message);
+      command = this._commandService.parse(input);
     } catch (e: any) {
       alert(e.message);
       return;
     }
 
+    this.loaders.sent = true;
+
     switch (command.operationName) {
       case "create":
         switch (command.operationModuleName) {
           case "ai-profile":
-            this._aiProfileService.create(command.options['name']).subscribe((res) => {
-              alert(res.message);
-            });
+            this.messages = [...this.messages, this.buildMessage(true, "You're about to execute a command to create new AI Profile. This may take a while...")];
+            this._aiProfileService.create(command.options['name'])
+              .pipe(
+                finalize(() => {
+                  this.loaders.sent = false;
+                })
+              )
+              .subscribe((res) => {
+                this.messages = [...this.messages, this.buildMessage(false, res.message)];
+              });
             break;
           default:
             alert("Invalid operation module name.");
@@ -57,6 +77,14 @@ export class HomeComponent implements OnInit {
         break;
       default:
         alert("Invalid operation name.");
+    }
+  }
+
+  buildMessage(isSender: boolean, message: string): Message {
+    return {
+      isSender,
+      message,
+      timestamp: new Date(),
     }
   }
 }

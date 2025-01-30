@@ -7,8 +7,8 @@ use crate::models::ai_profile::{self};
 #[post("")]
 pub async fn create(pool: web::Data<DbPool>, req: web::Json<Vec<String>>) -> impl Responder {
     let mut conn = pool.get().expect("couldn't get db connection from pool");
-    
-    diesel::insert_into(ai_profiles)
+
+    let rows_inserted = diesel::insert_into(ai_profiles)
         .values(
             ai_profile::AiProfileCreateRequest {
                 name: req[0].clone(),
@@ -17,5 +17,5 @@ pub async fn create(pool: web::Data<DbPool>, req: web::Json<Vec<String>>) -> imp
         .execute(&mut conn)
         .expect("Error inserting AI profile");
 
-    HttpResponse::Ok().json(vec!["AI Profile created successfully."])
+    HttpResponse::Ok().json(vec!["Your AI Profile has been created successfully!", &rows_inserted.to_string()])
 }
