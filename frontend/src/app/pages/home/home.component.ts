@@ -9,7 +9,10 @@ type Message = {
   isSender: boolean;
   message: string;
   timestamp: Date;
+  messageType: MessageType;
 };
+
+type MessageType = "NORMAL" | "AI_RESPONSE_ROWS_AFFECTED";
 
 @Component({
   standalone: true,
@@ -60,7 +63,7 @@ export class HomeComponent implements OnInit {
       case "create":
         switch (command.operationModuleName) {
           case "ai-profile":
-            this.messages = [...this.messages, this.buildMessage(true, "You're about to execute a command to create new AI Profile. This may take a while...")];
+            this.messages = [...this.messages, this.buildMessage(true, "You're about to execute a command to create new AI Profile. This may take a while...", "NORMAL")];
             this._aiProfileService.create(command.options['name'])
               .pipe(
                 finalize(() => {
@@ -68,7 +71,8 @@ export class HomeComponent implements OnInit {
                 })
               )
               .subscribe((res) => {
-                this.messages = [...this.messages, this.buildMessage(false, res.message)];
+                this.messages = [...this.messages, this.buildMessage(false, res.message, "NORMAL")];
+                this.messages = [...this.messages, this.buildMessage(false, `Query executed successfully. ${res.rows_inserted} row${res.rows_inserted > 1 ? "s" : ""} affected.`, "AI_RESPONSE_ROWS_AFFECTED")];
               });
             break;
           default:
@@ -80,11 +84,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  buildMessage(isSender: boolean, message: string): Message {
+  buildMessage(isSender: boolean, message: string, messageType: MessageType): Message {
     return {
       isSender,
       message,
       timestamp: new Date(),
+      messageType,
     }
   }
 }

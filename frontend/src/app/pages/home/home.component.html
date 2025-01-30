@@ -29,12 +29,24 @@
                         <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-sm">
                             AI
                         </div>
-                        <div class="max-w-[75%]">
-                            <div class="bg-gray-800 rounded-2xl rounded-tl-none px-3 py-1.5 text-gray-100 text-sm">
-                                {{ message.message }}
+                        @if (message.messageType === "NORMAL") {
+                            <div class="max-w-[75%]">
+                                <div class="bg-gray-800 rounded-2xl rounded-tl-none px-3 py-1.5 text-gray-100 text-sm">
+                                    {{ message.message }}
+                                </div>
+                                <span class="text-xs text-gray-500 ml-2 mt-1">{{ message.timestamp | date:'HH:mm' }}</span>
                             </div>
-                            <span class="text-xs text-gray-500 ml-2 mt-1">{{ message.timestamp | date:'HH:mm' }}</span>
-                        </div>
+                        } @else if (message.messageType === "AI_RESPONSE_ROWS_AFFECTED") {
+                            <div class="max-w-[75%]">
+                                <div class="bg-gray-700/50 border border-gray-600 rounded-2xl rounded-tl-none px-3 py-1.5 text-gray-300 text-sm flex items-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ message.message }}</span>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-2 mt-1">{{ message.timestamp | date:'HH:mm' }}</span>
+                            </div>
+                        }
                     </div>
                 }
             </ng-container>
